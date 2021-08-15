@@ -3,13 +3,13 @@ import ImageListResponse from '../models/image-list-response';
 
 export default class DogStore {
 
-    getBreedList: () => Promise<Breed[] | undefined> = async () => {
+    getBreedList = async () => {
         try {
             const resJson = await window.fetch("http://localhost:5000/dog/breeds");
             const res: BreedListResponse = await resJson.json();
             return res.breeds;
         } catch (error) {
-            
+            return Promise.reject(error);
         }
     }
 
@@ -26,7 +26,7 @@ export default class DogStore {
             const res: ImageListResponse = await resJson.json();
             return res.images;
         } catch (error) {
-            
+            return Promise.reject(error);
         }
     }
 }

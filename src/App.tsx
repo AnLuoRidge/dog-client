@@ -24,8 +24,8 @@ function App() {
           setBreedOptions(breedNames);
         }
       })
-      .catch((e) => {
-        alert('Failed to load breed data')
+      .catch(() => {
+        alert('Failed to load breed data. Is back-end running on port 5000?');
       })
       .finally(() => {
         setIsLoading(false);
@@ -39,11 +39,12 @@ function App() {
     setSubbreedSelected('');
     setDogImages([]);
     setIsLoading(true);
+    debugger;
     dogStore.getImages(valueSelected).then(res => {
       if (res) {
         setDogImages(res);
       } else {
-        console.error('Failed to load images');
+        alert('Failed to load images');
       }
     })
       .catch(() => {
