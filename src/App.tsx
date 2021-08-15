@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 import { Breed } from './models/breed';
 import DogStore from './stores/dog-store';
+import Spinner from './components/spinner';
 
 function App() {
   const [allBreeds, setAllBreeds] = useState<Breed[]>([]);
@@ -10,9 +11,11 @@ function App() {
   const [subbreedOptions, setSubbreedOptions] = useState<string[]>([]);
   const [subbreedSelected, setSubbreedSelected] = useState<string>('');
   const [dogImages, setDogImages] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const dogStore = new DogStore();
 
   useEffect(() => {
+    setIsLoading(true);
     dogStore.getBreedList()
       .then((res) => {
         if (res) {
@@ -21,6 +24,12 @@ function App() {
           setBreedOptions(breedNames);
         }
       })
+      .catch((e) => {
+        alert('Failed to load breed data')
+      })
+      .finally(() => {
+        setIsLoading(false);
+      })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -28,12 +37,20 @@ function App() {
     const valueSelected = e.target.value as string
     setBreedSelected(valueSelected);
     setSubbreedSelected('');
+    setDogImages([]);
+    setIsLoading(true);
     dogStore.getImages(valueSelected).then(res => {
       if (res) {
         setDogImages(res);
       } else {
         console.error('Failed to load images');
       }
+    })
+    .catch(() => {
+      alert('Failed to load images')
+    })
+    .finally(() => {
+      setIsLoading(false);
     })
 
     const breed: Breed | undefined = allBreeds.find((b) => b.breed === valueSelected)
@@ -47,12 +64,21 @@ function App() {
   const onSubbreedSelect = ((e: React.ChangeEvent<HTMLSelectElement>) => {
     const valueSelected = e.target.value as string
     setSubbreedSelected(valueSelected);
-    dogStore.getImages(breedSelected, valueSelected).then(res => {
+    setDogImages([]);
+    setIsLoading(true);
+    dogStore.getImages(breedSelected, valueSelected)
+    .then(res => {
       if (res) {
         setDogImages(res);
       } else {
         console.error('Failed to load images');
       }
+    })
+    .catch(() => {
+      alert('Failed to load images')
+    })
+    .finally(() => {
+      setIsLoading(false);
     })
   })
 
@@ -78,6 +104,7 @@ function App() {
         {subbreedOptions.map(subbreedName => (<option key={subbreedName} value={subbreedName}>{subbreedName}</option>))}
       </select>}
       </div>
+      {isLoading && <Spinner />}
       <div className='image-grid'>
         {dogImages.map((url, index) => (<img key={url} src={url} height='200rem' alt={`dog-${index}`} />))}
       </div>
