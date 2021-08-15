@@ -46,12 +46,12 @@ function App() {
         console.error('Failed to load images');
       }
     })
-    .catch(() => {
-      alert('Failed to load images')
-    })
-    .finally(() => {
-      setIsLoading(false);
-    })
+      .catch(() => {
+        alert('Failed to load images')
+      })
+      .finally(() => {
+        setIsLoading(false);
+      })
 
     const breed: Breed | undefined = allBreeds.find((b) => b.breed === valueSelected)
     if (breed && breed.subbreeds.length > 0) {
@@ -67,42 +67,42 @@ function App() {
     setDogImages([]);
     setIsLoading(true);
     dogStore.getImages(breedSelected, valueSelected)
-    .then(res => {
-      if (res) {
-        setDogImages(res);
-      } else {
-        console.error('Failed to load images');
-      }
-    })
-    .catch(() => {
-      alert('Failed to load images')
-    })
-    .finally(() => {
-      setIsLoading(false);
-    })
+      .then(res => {
+        if (res) {
+          setDogImages(res);
+        } else {
+          console.error('Failed to load images');
+        }
+      })
+      .catch(() => {
+        alert('Failed to load images')
+      })
+      .finally(() => {
+        setIsLoading(false);
+      })
   })
 
   return (
     <div className="app">
       <div className="drop-downs">
-      {breedOptions.length > 0 && <select
-        id="breed-select"
-        name="breed-select"
-        value={breedSelected}
-        onChange={onBreedSelect}
-      >
-        <option disabled value=''> -- select a breed -- </option>
-        {breedOptions.map(breedName => (<option key={breedName} value={breedName}>{breedName}</option>))}
-      </select>}
-      {subbreedOptions.length > 0 && <select
-        id="subbreed-select"
-        name="subbreed-select"
-        value={subbreedSelected}
-        onChange={onSubbreedSelect}
-      >
-        <option disabled value=''> -- select a subbreed -- </option>
-        {subbreedOptions.map(subbreedName => (<option key={subbreedName} value={subbreedName}>{subbreedName}</option>))}
-      </select>}
+        {breedOptions.length > 0 && <select
+          id="breed-select"
+          name="breed-select"
+          value={breedSelected}
+          onChange={onBreedSelect}
+        >
+          <option disabled value=''> -- select a breed -- </option>
+          {breedOptions.map(breedName => (<option key={breedName} value={breedName}>{breedName}</option>))}
+        </select>}
+        {subbreedOptions.length > 0 && <select
+          id="subbreed-select"
+          name="subbreed-select"
+          value={subbreedSelected}
+          onChange={onSubbreedSelect}
+        >
+          <option disabled value=''> -- select a subbreed -- </option>
+          {subbreedOptions.map(subbreedName => (<option key={subbreedName} value={subbreedName}>{subbreedName}</option>))}
+        </select>}
       </div>
       {isLoading && <Spinner />}
       <div className='image-grid'>
