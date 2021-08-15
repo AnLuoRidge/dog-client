@@ -1,6 +1,6 @@
 export type Breed = {
     breed: string,
-    subbreed: string[]
+    subbreeds: string[]
 }
 
 export type BreedListResponse = {
