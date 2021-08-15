@@ -9,6 +9,7 @@ function App() {
   const [breedSelected, setBreedSelected] = useState<string>('');
   const [subbreedOptions, setSubbreedOptions] = useState<string[]>([]);
   const [subbreedSelected, setSubbreedSelected] = useState<string>('');
+  const [dogImages, setDogImages] = useState<string[]>([]);
   const dogStore = new DogStore();
 
   useEffect(() => {
@@ -24,11 +25,35 @@ function App() {
   }, []);
 
   const onBreedSelect = ((e: React.ChangeEvent<HTMLSelectElement>) => {
+    const valueSelected = e.target.value as string
+    setBreedSelected(valueSelected);
+    setSubbreedSelected('');
+    dogStore.getImages(valueSelected).then(res => {
+      if (res) {
+        setDogImages(res);
+      } else {
+        console.error('Failed to load images');
+      }
+    })
 
+    const breed: Breed | undefined = allBreeds.find((b) => b.breed === valueSelected)
+    if (breed && breed.subbreeds.length > 0) {
+      setSubbreedOptions(breed.subbreeds);
+    } else {
+      setSubbreedOptions([]);
+    }
   })
 
   const onSubbreedSelect = ((e: React.ChangeEvent<HTMLSelectElement>) => {
-
+    const valueSelected = e.target.value as string
+    setSubbreedSelected(valueSelected);
+    dogStore.getImages(breedSelected, valueSelected).then(res => {
+      if (res) {
+        setDogImages(res);
+      } else {
+        console.error('Failed to load images');
+      }
+    })
   })
 
   return (
@@ -54,12 +79,7 @@ function App() {
       </select>}
       </div>
       <div className='image-grid'>
-      <img src='https://images.dog.ceo/breeds/beagle/DSC05086.JPG' height='200rem' alt='dog' />
-      <img src='https://images.dog.ceo/breeds/beagle/n02088364_10108.jpg' height='200rem' alt='dog' />
-      <img src='https://images.dog.ceo/breeds/beagle/n02088364_10206.jpg' height='200rem' alt='dog' />
-      <img src='https://images.dog.ceo/breeds/beagle/n02088364_10296.jpg' height='200rem' alt='dog' />
-      <img src='https://images.dog.ceo/breeds/beagle/n02088364_10354.jpg' height='200rem' alt='dog' />
-      <img src='https://images.dog.ceo/breeds/beagle/n02088364_10362.jpg' height='200rem' alt='dog' />
+        {dogImages.map((url, index) => (<img key={url} src={url} height='200rem' alt={`dog-${index}`} />))}
       </div>
     </div>
   );
