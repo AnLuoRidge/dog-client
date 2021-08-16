@@ -39,7 +39,6 @@ function App() {
     setSubbreedSelected('');
     setDogImages([]);
     setIsLoading(true);
-    debugger;
     dogStore.getImages(valueSelected).then(res => {
       if (res) {
         setDogImages(res);
